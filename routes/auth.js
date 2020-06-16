@@ -40,6 +40,7 @@ router.post('/login', (req, res)=>{
 
 
                 var paylod = {_id:user._id}
+
                 let token = jwt.sign(paylod, process.env.SECRET, {expiresIn:60*60*24*31})
                 res.send(token)
             }else{
