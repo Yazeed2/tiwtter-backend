@@ -58,6 +58,48 @@ router.post('/retweet', async(req, res)=> {
     }
 })
 
+router.post('/like', async (req, res)=> {
+    let payload = req.body; 
+    let token = payload.token 
+    if(token){ 
+        try{
+            let userToken = await validate(token)
+            let userId = userToken._id
+            let user = await Users.findById(userId) 
+            let tweet = await Tweet.findById(payload.tweetId)
+            let msg
+            if(user.likes.find(elem => elem == payload.tweetId )){
+                //unlike 
+                // tweet.likes = tweet.likes.filter(user=> user !== userId)
+                
+                user.likes.pull(payload.tweetId)
+                tweet.likes.pull(userId)
+                msg = 'unlike'
+                
+
+            }           
+            else{
+                //like
+                user.likes.push(payload.tweetId)
+                tweet.likes.push(userId)
+                console.log('like');
+                msg = "like"
+            }
+
+            await user.save()
+            await tweet.save()
+            res.status(200).send(msg)
+        }catch (err){
+            console.log(err);
+            
+            res.status(500).json({msg:err})
+            return; 
+        }
+    }else{
+        res.status(404).json({msg:'token not found :P'})
+        return; 
+    }
+})
 
 
 module.exports = router
