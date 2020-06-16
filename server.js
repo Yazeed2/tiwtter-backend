@@ -2,7 +2,9 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const mongoose = require('mongoose')
-const passport = require('passport')
+// const passport = require('passport')
+// const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models/User')
 require('dotenv/config')
 let PORT = process.env.PORT || 4000
 
@@ -17,6 +19,8 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
+// app.use(passport.initialize())
+// app.use(passport.session());
 
 app.use('/auth',require('./routes/auth'))
 
