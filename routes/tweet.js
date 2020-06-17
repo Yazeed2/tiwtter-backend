@@ -62,6 +62,7 @@ router.post('/like', async (req, res)=> {
     let payload = req.body; 
     let token = payload.token 
     if(token){ 
+
         try{
             let userToken = await validate(token)
             let userId = userToken._id
@@ -82,7 +83,6 @@ router.post('/like', async (req, res)=> {
                 //like
                 user.likes.push(payload.tweetId)
                 tweet.likes.push(userId)
-                console.log('like');
                 msg = "like"
             }
 
@@ -100,6 +100,76 @@ router.post('/like', async (req, res)=> {
         return; 
     }
 })
+router.post('/follow', async (req,res)=>{
+    let payload = req.body; 
+    let token = payload.token 
+    if(token){ 
+        try{
+            let userToken = await validate(token)
+            let userId = userToken._id
+            let user = await Users.findById(userId) 
+            let following = await Users.findById(payload.accountId)
+            let msg
+            if(user.following.find(elem => elem == payload.accountId )){
+                //unfollow                 
+                user.following.pull(payload.accountId)
+                following.followers.pull(userId)
+                msg = 'unfollow'
+            }           
+            else{
+                //follow
+                user.following.push(payload.accountId)
+                following.followers.push(userId)
+                msg = "follow"
+            }
 
+            await user.save()
+            await following.save()
+            res.status(200).send(msg)
+        }catch (err){
+            console.log(err);
+            
+            res.status(500).send(err)
+            return; 
+        }
+    }else{
+        res.status(404).json({msg:'token not found :P'})
+        return; 
+    }
+})
+
+
+
+
+router.post('/comment', async (req,res)=>{
+    let payload = req.body; 
+    let token = payload.token 
+    if(token){ 
+       
+        if(!payload.mainTweet) res.status(403).json({"msg": "main tweet ID is not found (mainTweet)"})
+        try{
+            let userToken = await validate(token)
+            let userId = userToken._id
+            let user = await Users.findById(userId) 
+            let tweet = new Tweet({mainTweet:payload.mainTweet, ...payload})
+            let mainTweet = await Tweet.findById(payload.mainTweet)
+            user.tweets.push(tweet._id)
+            mainTweet.comments.push(tweet._id)
+            tweet.user = user._id
+            await tweet.save()
+            await user.save()
+            await mainTweet.save()
+            res.status(200).send('done')
+        }catch (err){
+            console.log(err);
+            
+            res.status(500).send(err)
+            return; 
+        }
+    }else{
+        res.status(404).json({msg:'token not found :P'})
+        return; 
+    }
+})
 
 module.exports = router
