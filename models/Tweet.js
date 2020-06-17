@@ -7,11 +7,11 @@ const TweetSchema = new Schema({
         required:true,
         // add max characters 
     }, 
-    mainTweet: {type:mongoose.Schema.Types.ObjectId, ref:'tweets'}, // if the object is comment this get filled
-    comments: [{type: mongoose.Schema.Types.ObjectId, ref:'tweets'} ],
-    likes: [{type: mongoose.Schema.Types.ObjectId, ref:'users'} ],
-    user: {
-        type: mongoose.Schema.Types.ObjectId, ref:'users',
+    mainTweet: {type:mongoose.Schema.Types.ObjectId, ref:'tweet'}, // if the object is comment this get filled
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref:'tweet'} ],
+    likes: [{type: mongoose.Schema.Types.ObjectId, ref:'user'} ],
+    user:{
+        type: mongoose.Schema.Types.ObjectId, ref:'user',
         required: true
     },
 }, 

@@ -24,6 +24,7 @@ app.use(express.urlencoded({extended:false}))
 
 app.use('/auth',require('./routes/auth'))
 app.use('/tweet',require('./routes/tweet'))
+app.use('/feed',require('./routes/feed'))
 
 
 

@@ -14,11 +14,12 @@ const UserSchema = new Schema({
     description: String, 
     name: String, 
     profilePic: String, 
-    followers: [{type: mongoose.Schema.Types.ObjectId, ref:'users'} ],
-    following: [{type: mongoose.Schema.Types.ObjectId, ref:'users'} ],
-    tweets: [{type: mongoose.Schema.Types.ObjectId, ref:'tweets'} ],
-    comments: [{type: mongoose.Schema.Types.ObjectId, ref:'comments'} ],
-    likes:[{type: mongoose.Schema.Types.ObjectId, ref:'tweets'} ],
+    lastCheck: Date,
+    followers: [{type: mongoose.Schema.Types.ObjectId, ref:'user'} ],
+    following: [{type: mongoose.Schema.Types.ObjectId, ref:'user'} ],
+    tweets: [{type: mongoose.Schema.Types.ObjectId, ref:'tweet'} ],
+    comments: [{type: mongoose.Schema.Types.ObjectId, ref:'comment'} ],
+    likes:[{type: mongoose.Schema.Types.ObjectId, ref:'tweet'} ],
 }, 
 {timestamps: true}
 );
